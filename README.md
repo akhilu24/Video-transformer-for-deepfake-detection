@@ -1,198 +1,56 @@
-# 🎥 Video Transformer for Deepfake Detection
+# ISTVT-Official
+Implementation of ISTVT: Interpretable Spatial-Temporal Video Transformer for Deepfake Detection.
 
-A deep learning framework for detecting **deepfake videos** using a combination of **Convolutional Neural Networks (CNNs)** and **Transformer architectures**. The model extracts spatial features from individual video frames and learns temporal relationships across frames to accurately classify videos as **Real** or **Deepfake**.
+## Dataset Setup
 
----
+### Download FaceForensics++ Dataset
+- Visit: https://www.kaggle.com/datasets/hungle3401/faceforensics?resource=download-directory
+- Download the dataset manually
+- Extract to `./data/FF++/` directory
 
-## 📌 Overview
+   ```
+   ./data/FF++/
+   ├── real/           # Real video files
+   │   ├── video1.mp4
+   │   ├── video2.mp4
+   │   └── ...
+   └── fake/           # Fake video files
+       ├── video1.mp4
+       ├── video2.mp4
+       └── ...
+   ```
 
-Deepfake generation techniques have become increasingly sophisticated, making automated detection an important research problem. This project leverages CNNs for feature extraction and Transformer-based attention mechanisms for temporal modeling, enabling robust video-level deepfake detection.
+## Quick Start
 
----
-
-## ✨ Features
-
-- 🎯 Deepfake video classification
-- 🧠 CNN-based spatial feature extraction
-- 🔄 Transformer-based temporal feature learning
-- 📊 Training and evaluation pipeline
-- 📈 Feature map visualization
-- 🔍 Dataset verification utilities
-- 🧩 Modular and extensible project structure
-
----
-
-## 📂 Project Structure
-
-```text
-Video-transformer-for-deepfake-detection/
-│
-├── attention_lib/              # Attention modules
-├── data/                       # Data processing utilities
-├── dataset/                    # Dataset loader
-├── network/                    # Model architectures
-├── tfe/                        # Transformer Feature Encoder
-├── visualize/                  # Visualization utilities
-│
-├── train_CNN.py                # Model training script
-├── test_time.py                # Model testing/inference
-├── verify_dataset.py           # Dataset verification
-├── visualize_feat_map.py       # Feature map visualization
-├── visualize_rel.py            # Attention relationship visualization
-├── loss_fn.py                  # Loss functions
-├── requirements.txt            # Project dependencies
-└── README.md
-```
-
----
-
-## 🧠 Methodology
-
-The detection pipeline consists of the following stages:
-
-1. Load video dataset.
-2. Extract representative video frames.
-3. Process frames using a CNN backbone.
-4. Learn temporal dependencies using Transformer layers.
-5. Classify the video as **Real** or **Deepfake**.
-
-```text
-Video
-   │
-   ▼
-Frame Extraction
-   │
-   ▼
-CNN Feature Extraction
-   │
-   ▼
-Transformer Encoder
-   │
-   ▼
-Classification Layer
-   │
-   ▼
-Real / Deepfake
-```
-
----
-
-## 🚀 Installation
-
-### Clone the repository
-
+### Training
+Train the model with FaceForensics++ dataset using 20 videos:
 ```bash
-git clone https://github.com/akhilu24/Video-transformer-for-deepfake-detection.git
-cd Video-transformer-for-deepfake-detection
+cd /home/jjbigdub/gitrepo/2023-TIFS-ISTVT
+python3 train_CNN.py --model_name xception --batch_size 4 --epoches 10 --sub_dataset FaceForensics --sequence_length 4 --num_videos 20
 ```
 
-### Install dependencies
-
+### Visualization
+Generate LRP (Layer-wise Relevance Propagation) attribution visualizations:
 ```bash
-pip install -r requirements.txt
+cd /home/jjbigdub/gitrepo/2023-TIFS-ISTVT
+python3 visualize_rel.py --model_name xception --sub_dataset FaceForensics --model_path ./output/xception/best.pkl
 ```
 
----
+## Parameters
 
-## 📦 Requirements
+### Training Parameters
+- `--num_videos`: Number of videos to use for training/testing (default: 10)
+- `--model_name`: Model architecture (e.g., xception)
+- `--batch_size`: Batch size for training
+- `--epoches`: Number of training epochs
+- `--sequence_length`: Length of video sequences
+- `--sub_dataset`: Dataset to use (FaceForensics, Celeb, OULU)
 
-- Python 3.9+
-- PyTorch
-- Torchvision
-- NumPy
-- OpenCV
-- Matplotlib
+### Visualization Parameters
+- `--model_path`: Path to trained model weights
+- `--sub_dataset`: Dataset to use for visualization
+- `--batch_size`: Batch size for visualization (default: 16)
 
----
-
-## 📊 Dataset
-
-Place your dataset inside the `dataset/` directory.
-
-```text
-dataset/
-├── train/
-├── validation/
-└── test/
-```
-
-Supported datasets include:
-
-- FaceForensics++
-- Celeb-DF
-- DFDC
-- Custom video datasets
-
----
-
-## ▶️ Training
-
-```bash
-python train_CNN.py
-```
-
----
-
-## 🧪 Testing
-
-```bash
-python test_time.py
-```
-
----
-
-## 📈 Visualization
-
-Feature maps:
-
-```bash
-python visualize_feat_map.py
-```
-
-Attention relationships:
-
-```bash
-python visualize_rel.py
-```
-
----
-
-## 📋 Results
-
-Typical evaluation metrics include:
-
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- ROC-AUC
-
----
-
-## 🔮 Future Improvements
-
-- Vision Transformer (ViT) backbone
-- EfficientNet-based feature extraction
-- Real-time webcam inference
-- Streamlit web application
-- Model quantization for deployment
-- ONNX/TensorRT optimization
-- Multi-modal deepfake detection
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push your branch.
-5. Open a Pull Request.
-
----
-
-## 📄 License
-
-This project is intended for educational and research purposes.
+## Output
+- Training: Model weights saved in `./output/[model_name]/`
+- Visualization: Attribution maps saved in `./visualize/faceforensics/`
